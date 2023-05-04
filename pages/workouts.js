@@ -1,12 +1,16 @@
-import WorkoutCard from "./workoutCard";
+import WorkoutCard from "../lib/components/workoutCard";
 
-const Workouts = ({workouts}) => {
+const Workouts = ({ workouts }) => {
   return (
     <>
       <header>
         <h1>STRONGLIFTS</h1>
       </header>
-      {workouts.map(workout => <WorkoutCard key={workout.id} workout={workout} />)}
+      <div>
+        {workouts.map((workout) => (
+          <WorkoutCard key={workout.id} workout={workout} />
+        ))}
+      </div>
       <nav></nav>
     </>
   );
