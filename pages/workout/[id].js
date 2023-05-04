@@ -6,18 +6,24 @@ const prisma = new PrismaClient();
 const Workout = ({ workout }) => {
   const router = useRouter();
   const { id } = router.query;
+  const [data] = workout;
 
-  console.log(workout[0].exercises);
+  console.log(data)
 
   return (
     <>
-      <div>Workout {id}</div>
+      <div>
+        {data.name}
+      </div>
     </>
   );
 };
 
-export async function getServerSideProps() {
+export async function getServerSideProps(context) {
   const workout = await prisma.workout.findMany({
+    where: {
+      id: Number(context.params.id),
+    },
     include: {
       exercises: true,
     },
