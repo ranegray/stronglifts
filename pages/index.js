@@ -1,29 +1,27 @@
-import { Inter } from 'next/font/google'
-import Workouts from './workouts'
+import { Inter } from "next/font/google";
+import Workouts from "./workouts";
 import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
-const inter = Inter({ subsets: ['latin'] })
+const inter = Inter({ subsets: ["latin"] });
 
 export async function getServerSideProps() {
   const workouts = await prisma.workout.findMany({
     include: {
-      exercises: true
-    }
+      exercises: true,
+    },
   });
 
   return {
-    props: {workouts: workouts},
+    props: { workouts: workouts },
   };
 }
 
-export default function Home({workouts}) {
+export default function Home({ workouts }) {
   return (
-    <main
-      className={`flex min-h-screen flex-col items-center justify-between p-24 ${inter.className}`}
-    >
+    <main>
       <Workouts workouts={workouts} />
     </main>
-  )
+  );
 }
