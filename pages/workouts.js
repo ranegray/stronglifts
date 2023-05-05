@@ -6,12 +6,14 @@ const Workouts = ({ workouts }) => {
       <header>
         <h1>STRONGLIFTS</h1>
       </header>
-      <div>
+      <div className="h-full">
         {workouts.map((workout) => (
           <WorkoutCard key={workout.id} workout={workout} />
         ))}
       </div>
-      <nav></nav>
+      <nav>
+        <buttton type="button" className="text-red-600">Edit</buttton>
+      </nav>
     </>
   );
 };
