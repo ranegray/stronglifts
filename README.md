@@ -1,6 +1,20 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Stronglifts Clone
 
-## Getting Started
+Built this app over the span of 2 days using Nextjs. Learned a ton about Nextjs, server side rendering, static side generation, and data fetching. As we move back towards the server with React, I'm excited to see how using RSC changes over the next few years. 
+
+## Screenshots & Demo
+
+https://github.com/ranegray/stronglifts/assets/75066470/6e3c0d26-0cff-486f-a9ad-c7dfc2d30945
+
+## Tech Stack
+
+**Client:** React, TailwindCSS
+
+**Server:** Nextjs, Prisma
+
+**Database:** Postgres, Supabase
+
+## Installation
 
 First, run the development server:
 
