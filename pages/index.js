@@ -1,27 +1,22 @@
-import { Inter } from "next/font/google";
-import Workouts from "./workouts";
-import { PrismaClient } from "@prisma/client";
+import Workouts from "../lib/components/workouts";
+import BottomNav from "@/lib/components/BottomNav";
+import { useState, useEffect } from "react";
 
-const prisma = new PrismaClient();
+export default function Home() {
+  const [view, setView] = useState(0);
+  const [workouts, setWorkouts] = useState([]);
 
-const inter = Inter({ subsets: ["latin"] });
+  useEffect(() => {
+    fetch("/api/hello")
+      .then((res) => res.json())
+      .then((data) => setWorkouts([...workouts, ...data]));
+  }, []);
 
-export async function getServerSideProps() {
-  const workouts = await prisma.workout.findMany({
-    include: {
-      exercises: true,
-    },
-  });
-
-  return {
-    props: { workouts: workouts },
-  };
-}
-
-export default function Home({ workouts }) {
   return (
-    <main>
-      <Workouts workouts={workouts} />
+    <main className="h-screen flex flex-col">
+      {workouts.length > 0 ? <Workouts workouts={workouts} /> : <h1 className="text-xl flex justify-center">Loading...</h1>}
+
+      <BottomNav view={view} setView={setView} />
     </main>
   );
 }

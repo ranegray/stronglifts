@@ -1,22 +1,111 @@
-import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
 import { PrismaClient } from "@prisma/client";
+import { useRouter } from "next/router";
+import { ChevronLeftIcon } from "@heroicons/react/24/solid";
 import ExerciseCard from "@/lib/components/exerciseCard";
+import Timer from "@/lib/components/timer";
 
 const prisma = new PrismaClient();
 
 const Workout = ({ workout }) => {
   const router = useRouter();
-  const { id } = router.query;
   const [data] = workout;
+  const [started, setStarted] = useState(false);
+  const [timer, setTimer] = useState(false);
+  const [rest, setRest] = useState(false);
+  const [workoutDetails, setWorkoutDetails] = useState({});
 
-  console.log(data);
+  useEffect(() => {
+    if (data.name === "Workout A") {
+      setWorkoutDetails({
+        name: "Workout A",
+        exercises: [
+          {
+            name: "Squat",
+            sets: 0,
+            reps: 0,
+            weight: 0,
+          },
+          {
+            name: "Bench",
+            sets: 0,
+            reps: 0,
+            weight: 0,
+          },
+          {
+            name: "Deadlift",
+            sets: 0,
+            reps: 0,
+            weight: 0,
+          },
+        ],
+      });
+    } else {
+      setWorkoutDetails({
+        name: "Workout B",
+        exercises: [
+          {
+            name: "Squat",
+            sets: 0,
+            reps: 0,
+            weight: 0,
+          },
+          {
+            name: "Overhead Press",
+            sets: 0,
+            reps: 0,
+            weight: 0,
+          },
+          {
+            name: "Barbell Row",
+            sets: 0,
+            reps: 0,
+            weight: 0,
+          },
+        ],
+      });
+    }
+  }, []);
+
+  const handleFinish = () => {
+    fetch("/api/hello", {
+      method: "POST",
+      body: JSON.stringify(workoutDetails),
+      headers: { "Content-Type": "application/json" },
+    });
+
+    router.push("/");
+  };
 
   return (
     <>
-      <h1 className="font-semibold text-center mb-5">{data.name}</h1>
+      <div className="flex justify-between items-center m-4">
+        <button type="button" onClick={() => router.back()}>
+          <ChevronLeftIcon className="h-6 w-6" />
+        </button>
+        <h1 className="font-semibold">{data.name}</h1>
+        <button className="text-red-600 font-semibold" onClick={handleFinish}>
+          Finish
+        </button>
+      </div>
       {data.exercises.map((exercise) => (
-        <ExerciseCard key={exercise.id} exercise={exercise} />
+        <ExerciseCard
+          key={exercise.id}
+          exercise={exercise}
+          setStarted={setStarted}
+          started={started}
+          setRest={setRest}
+          rest={rest}
+          workoutDetails={workoutDetails}
+          setWorkoutDetails={setWorkoutDetails}
+        />
       ))}
+      {started ?
+        (rest ? (
+          <Timer key={Date.now()} timer={timer} setTimer={setTimer} setRest={setRest} />
+        ) : (
+          <div>Time for next set!</div>
+        )) : <div>Lets get started!</div>}
     </>
   );
 };
@@ -30,6 +119,8 @@ export async function getServerSideProps(context) {
       exercises: true,
     },
   });
+
+  console.log(context.query.exercise);
 
   return {
     props: {
