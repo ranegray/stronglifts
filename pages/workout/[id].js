@@ -7,11 +7,29 @@ import Timer from "@/lib/components/timer";
 
 const prisma = new PrismaClient();
 
+export async function getServerSideProps(context) {
+  const workout = await prisma.workout.findMany({
+    where: {
+      id: Number(context.params.id),
+    },
+    include: {
+      exercises: true,
+    },
+  });
+
+  console.log(context.query.exercise);
+
+  return {
+    props: {
+      workout: workout,
+    },
+  };
+}
+
 const Workout = ({ workout }) => {
   const router = useRouter();
   const [data] = workout;
   const [started, setStarted] = useState(false);
-  const [timer, setTimer] = useState(false);
   const [rest, setRest] = useState(false);
   const [workoutDetails, setWorkoutDetails] = useState({});
 
@@ -102,31 +120,12 @@ const Workout = ({ workout }) => {
       ))}
       {started ?
         (rest ? (
-          <Timer key={Date.now()} timer={timer} setTimer={setTimer} setRest={setRest} />
+          <Timer key={Date.now()} setRest={setRest} />
         ) : (
-          <div>Time for next set!</div>
-        )) : <div>Lets get started!</div>}
+          null
+        )) : null}
     </>
   );
 };
-
-export async function getServerSideProps(context) {
-  const workout = await prisma.workout.findMany({
-    where: {
-      id: Number(context.params.id),
-    },
-    include: {
-      exercises: true,
-    },
-  });
-
-  console.log(context.query.exercise);
-
-  return {
-    props: {
-      workout: workout,
-    },
-  };
-}
 
 export default Workout;

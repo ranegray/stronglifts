@@ -14,7 +14,11 @@ export default function Home() {
 
   return (
     <main className="h-screen flex flex-col">
-      {workouts.length > 0 ? <Workouts workouts={workouts} /> : <h1 className="text-xl flex justify-center">Loading...</h1>}
+      {workouts.length > 0 ? (
+        <Workouts workouts={workouts} />
+      ) : (
+        <h1 className="text-xl flex justify-center">Loading...</h1>
+      )}
 
       <BottomNav view={view} setView={setView} />
     </main>
